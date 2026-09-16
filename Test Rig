@@ -1,0 +1,96 @@
+package com.mycompany.correctchange;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class CorrectChangeGUI extends JFrame {
+
+    private JTextField amountField;
+    private JTextArea outputArea;
+    private JButton calculateButton;
+
+    public CorrectChangeGUI() {
+
+        setTitle("Correct Change Calculator");
+        setSize(420, 420);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JLabel instructions =
+                new JLabel("Enter the amount of change: $");
+
+        amountField = new JTextField(10);
+        calculateButton = new JButton("Calculate Change");
+
+        outputArea = new JTextArea(13, 25);
+        outputArea.setEditable(false);
+        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.add(instructions);
+        inputPanel.add(amountField);
+        inputPanel.add(calculateButton);
+
+        add(inputPanel, BorderLayout.NORTH);
+        add(new JScrollPane(outputArea), BorderLayout.CENTER);
+
+        calculateButton.addActionListener(event -> calculateChange());
+
+        setVisible(true);
+    }
+
+    private void calculateChange() {
+
+        try {
+            double amount = Double.parseDouble(amountField.getText());
+
+            if (amount < 0) {
+                outputArea.setText("Please enter a positive amount.");
+                return;
+            }
+
+            // Convert to cents to prevent double rounding errors
+            int totalCents = (int) Math.round(amount * 100);
+
+            int tenDollarBills = totalCents / 1000;
+            totalCents %= 1000;
+
+            int fiveDollarBills = totalCents / 500;
+            totalCents %= 500;
+
+            int oneDollarBills = totalCents / 100;
+            totalCents %= 100;
+
+            int quarters = totalCents / 25;
+            totalCents %= 25;
+
+            int dimes = totalCents / 10;
+            totalCents %= 10;
+
+            int nickels = totalCents / 5;
+            totalCents %= 5;
+
+            int pennies = totalCents;
+
+            outputArea.setText(
+                    "Correct Change\n\n"
+                    + "Ten Dollar Bills: " + tenDollarBills + "\n"
+                    + "Five Dollar Bills: " + fiveDollarBills + "\n"
+                    + "One Dollar Bills: " + oneDollarBills + "\n"
+                    + "Quarters: " + quarters + "\n"
+                    + "Dimes: " + dimes + "\n"
+                    + "Nickels: " + nickels + "\n"
+                    + "Pennies: " + pennies
+            );
+
+        } catch (NumberFormatException error) {
+            outputArea.setText(
+                    "Invalid input.\nPlease enter an amount such as 47.63."
+            );
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(CorrectChangeGUI::new);
+    }
+}
