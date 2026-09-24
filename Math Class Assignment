@@ -1,0 +1,51 @@
+package com.mycompany.stringproject;
+
+import java.util.Scanner;
+
+public class MathClass {
+
+    public static double roundAvoid(double num, int places) {
+        double scale = Math.pow(10, places);
+        return Math.round(num * scale) / scale;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        int number = (int) (Math.random() * 91);
+
+        System.out.printf("Number: %d Sine: %.3f Cosine: %.3f Tangent: %.3f%n",
+                number, Math.sin(number), Math.cos(number), Math.tan(number));
+
+        double radius = 1 + Math.random() * 19;
+
+        System.out.printf("Radius: %.3f Area: %.3f Sphere Volume: %.3f%n",
+                radius, Math.PI * Math.pow(radius, 2),
+                (4.0 / 3.0) * Math.PI * Math.pow(radius, 3));
+
+        double largeNum = 100000000
+                + Math.random() * (100000000000.0 - 100000000);
+
+        System.out.printf("Number: %.5f Square Root: %.5f Natural Log: %.5f Log10: %.5f%n",
+                largeNum, Math.sqrt(largeNum),
+                Math.log(largeNum), Math.log10(largeNum));
+
+        System.out.print("Enter the number of decimal places: ");
+        int places = input.nextInt();
+
+        double mass = (largeNum / Math.pow(299792458, 2)) * 1000;
+        System.out.println("Mass: " + roundAvoid(mass, places) + " grams");
+
+        System.out.print("Enter a real number: ");
+        double value = input.nextDouble();
+
+        System.out.print("Enter an integer power: ");
+        int power = input.nextInt();
+
+        System.out.println("Answer: "
+                + roundAvoid(Math.pow(value, power), places));
+
+        input.close();
+    }
+}
