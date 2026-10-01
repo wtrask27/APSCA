@@ -1,0 +1,90 @@
+package com.mycompany.numberformatting;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Scanner;
+
+public class NumberFormatting {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        Random rand = new Random();
+
+        // Part 1: Calculate and format student percentages.
+        System.out.print("Enter the total number of students: ");
+        int totalStudents = input.nextInt();
+
+        System.out.print("Enter the number of girls: ");
+        int girls = input.nextInt();
+
+        if (totalStudents > 0 && girls >= 0 && girls <= totalStudents) {
+            int boys = totalStudents - girls;
+
+            NumberFormat percent = NumberFormat.getPercentInstance();
+            percent.setMinimumFractionDigits(2);
+            percent.setMaximumFractionDigits(2);
+
+            // Casting to double prevents integer division.
+            System.out.println("Girls: "
+                    + percent.format((double) girls / totalStudents));
+            System.out.println("Boys: "
+                    + percent.format((double) boys / totalStudents));
+        } else {
+            System.out.println("Invalid student numbers.");
+        }
+
+        // Part 2: Convert dollars using the given exchange rates.
+        System.out.print("\nEnter an amount in dollars and cents: ");
+        double dollars = input.nextDouble();
+
+        convertMoney(dollars);
+
+        // Part 3: Display Math.PI with the requested decimal places.
+        System.out.print("\nEnter an integer from 0 to 15: ");
+        int decimalPlaces = input.nextInt();
+
+        while (decimalPlaces < 0 || decimalPlaces > 15) {
+            System.out.print("Please enter an integer from 0 to 15: ");
+            decimalPlaces = input.nextInt();
+        }
+
+        NumberFormat piFormat = NumberFormat.getNumberInstance(Locale.US);
+        piFormat.setMinimumFractionDigits(decimalPlaces);
+        piFormat.setMaximumFractionDigits(decimalPlaces);
+
+        System.out.println("Pi: " + piFormat.format(Math.PI));
+
+        // Part 4: Generate a random value and avoid scientific notation.
+        double minimum = 100_000_000.0;
+        double maximum = 999e18;
+        double randomNumber = minimum
+                + rand.nextDouble() * (maximum - minimum);
+
+        NumberFormat randomFormat =
+                NumberFormat.getNumberInstance(Locale.US);
+        randomFormat.setGroupingUsed(false);
+        randomFormat.setMaximumFractionDigits(15);
+
+        System.out.println("\nRandom number: "
+                + randomFormat.format(randomNumber));
+
+        input.close();
+    }
+
+    // Convert dollars to pounds and euros using locale currency formats.
+    public static void convertMoney(double dollars) {
+        double poundRate = 0.75;
+        double euroRate = 0.86;
+
+        NumberFormat pounds =
+                NumberFormat.getCurrencyInstance(Locale.UK);
+        NumberFormat euros =
+                NumberFormat.getCurrencyInstance(Locale.GERMANY);
+
+        System.out.println("British pounds ($1 = £0.75): "
+                + pounds.format(dollars * poundRate));
+        System.out.println("Euros ($1 = €0.86): "
+                + euros.format(dollars * euroRate));
+    }
+}
