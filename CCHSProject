@@ -1,0 +1,55 @@
+package com.mycompany.cchsproject;
+
+import java.util.Scanner;
+
+public class CCHSProject {
+
+    enum Day {
+        SUNDAY, MONDAY, TUESDAY, WEDNESDAY,
+        THURSDAY, FRIDAY, SATURDAY
+    }
+
+    enum Month {
+        JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE,
+        JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+    }
+
+    public static void main(String[] args) {
+
+        // 1a: Print the days with numbers 1–7.
+        System.out.println("Days of the Week:");
+
+        for (Day day : Day.values()) {
+            System.out.println(day + ": " + (day.ordinal() + 1));
+        }
+
+        // 1b: Print the months with numbers 1–12.
+        System.out.println("\nMonths of the Year:");
+
+        for (Month month : Month.values()) {
+            System.out.println(month + ": " + (month.ordinal() + 1));
+        }
+
+        // 2: Ask for the username, including graduation year.
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("\nEnter your CCHS username (including graduation year): ");
+        String username = input.nextLine().trim();
+
+        // Extract the last four characters of the username.
+        String yearString = username.substring(username.length() - 4);
+
+        // Parse the year and store it in an Integer object.
+        Integer graduationYear = Integer.parseInt(yearString);
+
+        System.out.println("Your graduation year is: " + graduationYear);
+
+        System.out.println("The year after your graduation year is: "
+                + (graduationYear + 1));
+
+        System.out.println("In computer language, you graduate in: "
+                + Integer.toBinaryString(graduationYear));
+
+        input.close();
+    }
+}
