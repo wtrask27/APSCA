@@ -1,0 +1,44 @@
+package com.mycompany.enumsandgraduation; // Places the class in your project's package.
+
+import java.util.Scanner; // Imports Scanner to read keyboard input.
+
+public class EnumsAndGraduation { // Defines the program's class.
+
+    enum Day { // Creates an enumeration for the days of the week.
+        SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY // Lists the seven days in order.
+    } // Ends the Day enumeration.
+
+    enum Month { // Creates an enumeration for the months of the year.
+        JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, // Lists the first six months.
+        JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER // Lists the last six months.
+    } // Ends the Month enumeration.
+
+    public static void main(String[] args) { // Starts the main method.
+
+        System.out.println("DAYS OF THE WEEK"); // Prints a heading for part 1a.
+
+        for (Day day : Day.values()) { // Loops through every value in the Day enumeration.
+            System.out.println(day + ": " + (day.ordinal() + 1)); // Prints the day and its number from 1 to 7.
+        } // Ends the days loop.
+
+        System.out.println("\nMONTHS OF THE YEAR"); // Prints a blank line and a heading for part 1b.
+
+        for (Month month : Month.values()) { // Loops through every value in the Month enumeration.
+            System.out.println(month + ": " + (month.ordinal() + 1)); // Prints the month and its number from 1 to 12.
+        } // Ends the months loop.
+
+        Scanner input = new Scanner(System.in); // Creates a Scanner for keyboard input.
+
+        System.out.print("\nEnter your CCHS username, including graduation year: "); // Prompts for a username such as wtrask2027.
+        String username = input.nextLine(); // Stores the entered username as a String.
+
+        String yearString = username.substring(username.length() - 4); // Extracts the last four characters as the graduation year.
+        Integer graduationYear = Integer.valueOf(yearString); // Parses the year String and stores it in an Integer object.
+
+        System.out.println("Your graduation year is: " + graduationYear); // Prints the graduation year.
+        System.out.println("The year after your graduation year is: " + (graduationYear + 1)); // Adds 1 and prints the following year.
+        System.out.println("In computer language, you graduate in: " + Integer.toBinaryString(graduationYear)); // Prints the graduation year in binary.
+
+        input.close(); // Closes the Scanner.
+    } // Ends the main method.
+} // Ends the Main class.
