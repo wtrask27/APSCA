@@ -1,0 +1,54 @@
+public class Car {
+    private String carBrand;
+    private int enginePower;
+    private double maxSpeed;
+    private double price;
+
+    // Constructor that creates a base car
+    public Car() {
+        carBrand = "Base Car";
+        enginePower = 100;
+        maxSpeed = 100.0;
+        price = 20000.0;
+    }
+
+    public void setCarBrand(String brand) {
+        carBrand = brand;
+    }
+
+    public String getCarBrand() {
+        return carBrand;
+    }
+
+    public void setEnginePower(int power) {
+        enginePower = power;
+    }
+
+    public int getEnginePower() {
+        return enginePower;
+    }
+
+    public void setCarSpeed(double speed) {
+        maxSpeed = speed;
+    }
+
+    public double getCarSpeed() {
+        return maxSpeed;
+    }
+
+    public void setPrice(double cost) {
+        price = cost;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "Car: %s%nEngine Power: %d HP%nMax Speed: %.1f MPH%nPrice: $%,.2f",
+            carBrand, enginePower, maxSpeed, price
+        );
+    }
+}
