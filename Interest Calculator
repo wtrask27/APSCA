@@ -1,0 +1,91 @@
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        // Create formatters for money and percentages.
+        NumberFormat currency =
+                NumberFormat.getCurrencyInstance(Locale.US);
+        NumberFormat percent =
+                NumberFormat.getPercentInstance(Locale.US);
+        percent.setMinimumFractionDigits(1);
+
+        // Ask the user for the amount borrowed.
+        System.out.print("Enter the loan amount (without $ or commas): ");
+        double amount = input.nextDouble();
+
+        // Ask how many months the borrower will take to repay it.
+        System.out.print("Enter the number of months for repayment: ");
+        int months = input.nextInt();
+
+        // Reject invalid values before performing calculations.
+        if (amount <= 0 || months <= 0) {
+            System.out.println("The amount and months must be positive.");
+            input.close();
+            return;
+        }
+
+        // Create the calculator with the repayment period.
+        InterestRateCalculator calculator =
+                new InterestRateCalculator(months);
+
+        // Use the calculator as a black box to get the payment.
+        double monthlyPayment =
+                calculator.calculateMonthlyPayment(amount);
+
+        // Calculate the total amount repaid.
+        double totalRepaid = monthlyPayment * months;
+
+        // Display the results using appropriate formatting.
+        System.out.println("\nLoan amount: " + currency.format(amount));
+        System.out.println("Repayment period: " + months + " months");
+        System.out.println("Interest rate: "
+                + percent.format(InterestRateCalculator.RATE));
+        System.out.println("Monthly payment: "
+                + currency.format(monthlyPayment));
+        System.out.println("Total amount repaid: "
+                + currency.format(totalRepaid));
+
+        input.close();
+    }
+}
+
+// Separate class that handles the monthly payment calculation.
+class InterestRateCalculator {
+
+    // Public constant: accessible without creating an object.
+    public static final double RATE = 0.035;
+
+    // Private field: repayment information is hidden inside this class.
+    private final int months;
+
+    // Constructor sets the repayment period.
+    public InterestRateCalculator(int months) {
+        if (months <= 0) {
+            throw new IllegalArgumentException(
+                    "Repayment months must be positive.");
+        }
+
+        this.months = months;
+    }
+
+    // Public method accepts the amount and returns the monthly payment.
+    public double calculateMonthlyPayment(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException(
+                    "Loan amount must be positive.");
+        }
+
+        // Divide the loan into equal monthly portions.
+        double monthlyAmount = amount / months;
+
+        // Add interest to the monthly portion.
+        double monthlyInterest = monthlyAmount * RATE;
+
+        return monthlyAmount + monthlyInterest;
+    }
+}
