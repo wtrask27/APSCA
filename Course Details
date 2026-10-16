@@ -1,0 +1,53 @@
+public class CourseDetails {
+    public static void main(String[] args) {
+        Course a = new Course("Computer Science", "AP CS A", 100, "Mr. Smith");
+        Course b = new Course("Physics", "AP Physics C", 150, "Mrs. Jones");
+        Course c = new Course("Statistics");
+
+        c.setCode("AP Stats");
+        c.setPointsTotal(200);
+        c.setInstructor("Ms. Brown");
+
+        a.setPointsTotal(120);
+        b.setTitle("Physics C");
+
+        // Retrieve values using all getters.
+        System.out.println(c.getTitle() + ", " + c.getCode() + ", "
+                + c.getPointsTotal() + ", " + c.getInstructor());
+
+        // println automatically calls toString().
+        System.out.println("\n" + a + "\n\n" + b + "\n\n" + c);
+    }
+}
+
+class Course {
+    private String title, code, instructor;
+    private int pointsTotal;
+
+    public Course(String title, String code, int pointsTotal, String instructor) {
+        this.title = title;
+        this.code = code;
+        this.pointsTotal = pointsTotal;
+        this.instructor = instructor;
+    }
+
+    public Course(String title) {
+        this(title, "Unassigned", 0, "Unassigned");
+    }
+
+    public String getTitle() { return title; }
+    public String getCode() { return code; }
+    public int getPointsTotal() { return pointsTotal; }
+    public String getInstructor() { return instructor; }
+
+    public void setTitle(String title) { this.title = title; }
+    public void setCode(String code) { this.code = code; }
+    public void setPointsTotal(int pointsTotal) { this.pointsTotal = pointsTotal; }
+    public void setInstructor(String instructor) { this.instructor = instructor; }
+
+    @Override
+    public String toString() {
+        return "Title: " + title + "\nCode: " + code
+                + "\nPoints: " + pointsTotal + "\nInstructor: " + instructor;
+    }
+}
