@@ -1,0 +1,108 @@
+package com.mycompany.mystore;
+
+import java.util.Scanner;
+
+public class MyStore {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        final double MAX_BUDGET = 250.00;
+
+        Item[] items = {
+            new Item("T Shirt", 29.99),
+            new Item("Shoes", 125.99),
+            new Item("Jeans", 60.99),
+            new Item("Jacket", 250.00),
+            new Item("Hat", 25.99),
+            new Item("Shorts", 75.99),
+            new Item("Blouse", 88.99)
+        };
+
+        double total = 0;
+        int count = 0;
+
+        for (Item item : items) {
+            System.out.println(item);
+        }
+
+        System.out.println("\nBudget: $250.00");
+
+        while (true) {
+            System.out.print("\nEnter an item or Done to finish: ");
+            String name = input.nextLine().trim();
+
+            if (name.equalsIgnoreCase("Done")) {
+                break;
+            }
+
+            Item selected = null;
+
+            for (Item item : items) {
+                if (name.equalsIgnoreCase(item.getStrName())) {
+                    selected = item;
+                    break;
+                }
+            }
+
+            if (selected == null) {
+                System.out.println("Item not found.");
+            } else {
+                double newTotal = Math.round(
+                    (total + selected.getDblPrice()) * 100
+                ) / 100.0;
+
+                if (newTotal > MAX_BUDGET) {
+                    System.out.println(
+                        "Warning: Over budget! Item was not added."
+                    );
+                } else {
+                    total = newTotal;
+                    count++;
+                    System.out.println("Added: " + selected.getStrName());
+                }
+            }
+
+            System.out.printf(
+                "Items: %d | Spent: $%.2f | Remaining: $%.2f%n",
+                count, total, MAX_BUDGET - total
+            );
+        }
+
+        System.out.printf(
+            "%nFinal count: %d | Total: $%.2f%n", count, total
+        );
+
+        input.close();
+    }
+}
+
+class Item {
+    private String strName;
+    private double dblPrice;
+
+    public Item(String name, double price) {
+        strName = name;
+        dblPrice = price;
+    }
+
+    public String getStrName() {
+        return strName;
+    }
+
+    public void setStrName(String name) {
+        strName = name;
+    }
+
+    public double getDblPrice() {
+        return dblPrice;
+    }
+
+    public void setDblPrice(double price) {
+        dblPrice = price;
+    }
+
+    public String toString() {
+        return String.format(
+            "Item: %s, Price: %.2f", strName, dblPrice
+        );
+    }
+}
