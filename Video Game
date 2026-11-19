@@ -1,0 +1,283 @@
+package com.mycompany.videogame;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class VideoGame {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int bestScore = 0;
+        boolean playAgain = true;
+
+        System.out.println("====================================");
+        System.out.println("         HIGHER OR LOWER");
+        System.out.println("====================================");
+        System.out.println("Predict whether the next card will");
+        System.out.println("be higher or lower than your card.");
+        System.out.println();
+        System.out.println("RULES");
+        System.out.println("- You begin with 3 lives.");
+        System.out.println("- Wrong guesses cost 1 life.");
+        System.out.println("- Correct guesses earn 10 points.");
+        System.out.println("- Consecutive correct guesses earn");
+        System.out.println("  an extra 5 points per streak step.");
+        System.out.println("- Ties preserve your lives and streak.");
+        System.out.println("- Suits do not affect card value.");
+        System.out.println("- Order: 2 through 10, Jack, Queen,");
+        System.out.println("  King, Ace. Aces are highest.");
+        System.out.println("- Enter Q during a game to end it.");
+        System.out.println();
+
+        while (playAgain) {
+            Deck deck = new Deck();
+            Card currentCard = deck.drawCard();
+
+            int lives = 3;
+            int score = 0;
+            int streak = 0;
+            int longestStreak = 0;
+            int correctGuesses = 0;
+            int totalGuesses = 0;
+            boolean quitRound = false;
+
+            ArrayList<String> history = new ArrayList<>();
+
+            while (lives > 0 && deck.cardsLeft() > 0 && !quitRound) {
+                System.out.println("\n------------------------------------");
+                System.out.printf(
+                        "Score: %d | Lives: %d | Streak: %d%n",
+                        score, lives, streak
+                );
+                System.out.printf(
+                        "Cards remaining: %d%n", deck.cardsLeft()
+                );
+                System.out.println("------------------------------------");
+                System.out.println("CURRENT CARD");
+                currentCard.display();
+
+                String guess = readChoice(
+                        input,
+                        "Higher (H), Lower (L), or Quit (Q): ",
+                        "H", "L", "Q"
+                );
+
+                if (guess.equals("Q")) {
+                    quitRound = true;
+                } else {
+                    Card nextCard = deck.drawCard();
+                    totalGuesses++;
+
+                    System.out.println("\nNEXT CARD");
+                    nextCard.display();
+
+                    int currentValue = currentCard.getValue();
+                    int nextValue = nextCard.getValue();
+                    String result;
+
+                    if (nextValue == currentValue) {
+                        result = "TIE";
+                        System.out.println(
+                                "Same value! Your lives and streak stay the same."
+                        );
+                    } else {
+                        boolean correct =
+                                (guess.equals("H") && nextValue > currentValue)
+                                || (guess.equals("L") && nextValue < currentValue);
+
+                        if (correct) {
+                            streak++;
+                            correctGuesses++;
+
+                            int pointsEarned = 10 + (streak - 1) * 5;
+                            score += pointsEarned;
+                            longestStreak = Math.max(longestStreak, streak);
+                            result = "CORRECT";
+
+                            System.out.printf(
+                                    "Correct! You earned %d points.%n",
+                                    pointsEarned
+                            );
+
+                            if (streak >= 3) {
+                                System.out.printf(
+                                        "You're on a %d-card streak!%n", streak
+                                );
+                            }
+                        } else {
+                            lives--;
+                            streak = 0;
+                            result = "WRONG";
+
+                            System.out.println("Wrong guess! You lost a life.");
+                            System.out.printf("Lives remaining: %d%n", lives);
+                        }
+                    }
+
+                    String prediction = guess.equals("H") ? "Higher" : "Lower";
+
+                    history.add(String.format(
+                            "%2d. %-18s -> %-18s | %-6s | %s",
+                            totalGuesses,
+                            currentCard,
+                            nextCard,
+                            prediction,
+                            result
+                    ));
+
+                    currentCard = nextCard;
+                }
+            }
+
+            System.out.println("\n====================================");
+            System.out.println("             GAME OVER");
+            System.out.println("====================================");
+
+            if (lives == 0) {
+                System.out.println("You ran out of lives.");
+            } else if (deck.cardsLeft() == 0) {
+                System.out.println("You survived the entire deck!");
+            } else {
+                System.out.println("You ended this game.");
+            }
+
+            System.out.printf("Final score:     %d%n", score);
+            System.out.printf("Correct guesses: %d of %d%n",
+                    correctGuesses, totalGuesses);
+            System.out.printf("Longest streak:  %d%n", longestStreak);
+
+            if (score > bestScore) {
+                bestScore = score;
+                System.out.println("NEW SESSION BEST!");
+            }
+
+            System.out.printf("Session best:    %d%n", bestScore);
+
+            if (!history.isEmpty()) {
+                String showHistory = readChoice(
+                        input,
+                        "\nView your card history? (Y/N): ",
+                        "Y", "N"
+                );
+
+                if (showHistory.equals("Y")) {
+                    System.out.println("\nCARD HISTORY");
+                    for (String round : history) {
+                        System.out.println(round);
+                    }
+                }
+            }
+
+            String answer = readChoice(
+                    input,
+                    "\nPlay again? (Y/N): ",
+                    "Y", "N"
+            );
+
+            playAgain = answer.equals("Y");
+        }
+
+        System.out.println("\nThanks for playing Higher or Lower!");
+        input.close();
+    }
+
+    // Keeps asking until the user enters an allowed choice.
+    private static String readChoice(
+            Scanner input, String prompt, String... validChoices) {
+
+        while (true) {
+            System.out.print(prompt);
+
+            // Ends gracefully if the input stream closes.
+            if (!input.hasNextLine()) {
+                return validChoices[validChoices.length - 1];
+            }
+
+            String answer = input.nextLine().trim();
+
+            for (String choice : validChoices) {
+                if (answer.equalsIgnoreCase(choice)) {
+                    return choice;
+                }
+            }
+
+            System.out.println(
+                    "Invalid entry. Please enter "
+                    + String.join(" or ", validChoices) + "."
+            );
+        }
+    }
+}
+
+// Represents one playing card.
+class Card {
+    private final int value;
+    private final String suit;
+
+    public Card(int value, String suit) {
+        this.value = value;
+        this.suit = suit;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public String getRank() {
+        switch (value) {
+            case 11:
+                return "Jack";
+            case 12:
+                return "Queen";
+            case 13:
+                return "King";
+            case 14:
+                return "Ace";
+            default:
+                return String.valueOf(value);
+        }
+    }
+
+    public void display() {
+        System.out.println("+----------------------+");
+        System.out.printf("| %-20s |%n", getRank());
+        System.out.printf("| %-20s |%n", "of " + suit);
+        System.out.println("+----------------------+");
+    }
+
+    @Override
+    public String toString() {
+        return getRank() + " of " + suit;
+    }
+}
+
+// Creates, shuffles, and deals a standard 52-card deck.
+class Deck {
+    private final ArrayList<Card> cards;
+
+    public Deck() {
+        cards = new ArrayList<>();
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+
+        for (String suit : suits) {
+            for (int value = 2; value <= 14; value++) {
+                cards.add(new Card(value, suit));
+            }
+        }
+
+        Collections.shuffle(cards);
+    }
+
+    public Card drawCard() {
+        if (cards.isEmpty()) {
+            throw new IllegalStateException("The deck is empty.");
+        }
+
+        return cards.remove(cards.size() - 1);
+    }
+
+    public int cardsLeft() {
+        return cards.size();
+    }
+}
